@@ -148,9 +148,12 @@ class _LoginPageState extends State<LoginPage> {
   void _handleLoginUser() {
     // login user
     if (_loginFormKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Submitting data..')),
-      );
+      final requestm = RequestForLogin(
+          email: emailController.text, password: passwordController.text);
+      context.read<AuthBloc>().add(LoginButtonPressed(requestm));
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Submitting data..')),
+      // );
     }
   }
 }
