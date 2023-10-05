@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class ResponseAuth {
@@ -25,9 +26,7 @@ class ResponseAuth {
       };
 
   @override
-  String toString() {
-    return 'ResponseAuth{meta: $meta, data: $data}';
-  }
+  String toString() => 'ResponseAuth(meta: $meta, data: $data)';
 }
 
 class Data {

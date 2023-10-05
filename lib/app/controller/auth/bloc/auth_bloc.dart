@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:math';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:myposh/app/models/auth/request/request_login.dart';
@@ -26,10 +23,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginButtonPressed>((event, emit) async {
       emit(AuthLoading());
       try {
-        final login = await repository.signIn(event.request);
-        if (login!.meta!.status != 'success') {
-          await repository.persisToken(login.data!.accessToken!);
-          emit(UserLoaded(login));
+        final result = await repository.signIn(event.requestmodel);
+        if (result.meta!.status != 'failed') {
+          await repository.persisToken(result.data!.accessToken!);
+          emit(UserLoaded(model: result));
+          print(result.data!.user!.name);
         }
       } catch (error) {
         emit(AuthFailure(error.toString()));

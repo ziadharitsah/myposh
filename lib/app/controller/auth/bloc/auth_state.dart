@@ -31,7 +31,7 @@ class AuthFailure extends AuthState {
 class UserLoaded extends AuthState {
   final ResponseAuth model;
 
-  const UserLoaded(this.model);
+  const UserLoaded({required this.model});
   @override
   // TODO: implement props
   List<Object?> get props => [model];

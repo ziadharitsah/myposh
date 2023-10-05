@@ -32,9 +32,9 @@ class LoggedOut extends AuthEvent {
 }
 
 class LoginButtonPressed extends AuthEvent {
-  final RequestForLogin request;
+  final RequestLogin requestmodel;
 
-  const LoginButtonPressed(this.request);
+  const LoginButtonPressed({required this.requestmodel});
   @override
   // TODO: implement props
   List<Object?> get props => [];
@@ -42,6 +42,6 @@ class LoginButtonPressed extends AuthEvent {
   @override
   String toString() {
     // TODO: implement toString
-    return 'LoginButtonPressed {$request}';
+    return 'LoginButtonPressed {$requestmodel}';
   }
 }

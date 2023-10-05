@@ -74,10 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: GestureDetector(
                             onTap: () => {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ForgotPasswordPage()))
+                                  context, MaterialPageRoute(builder: (context) => const ForgotPasswordPage()))
                             },
                             child: const Text(
                               'Forget password?',
@@ -92,9 +89,20 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(
                           height: 20,
                         ),
-                        CustomFormButton(
-                          innerText: 'Login',
-                          onPressed: _handleLoginUser,
+                        BlocConsumer<AuthBloc, AuthState>(
+                          listener: (context, state) {
+                            if (state is UserLoaded) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('${state.model.data!.accessToken}')),
+                              );
+                            }
+                          },
+                          builder: (context, state) {
+                            return CustomFormButton(
+                              innerText: 'Login',
+                              onPressed: _handleLoginUser,
+                            );
+                          },
                         ),
                         const SizedBox(
                           height: 18,
@@ -106,25 +114,15 @@ class _LoginPageState extends State<LoginPage> {
                             children: [
                               const Text(
                                 'Don\'t have an account ? ',
-                                style: TextStyle(
-                                    fontSize: 13,
-                                    color: Color(0xff939393),
-                                    fontWeight: FontWeight.bold),
+                                style: TextStyle(fontSize: 13, color: Color(0xff939393), fontWeight: FontWeight.bold),
                               ),
                               GestureDetector(
                                 onTap: () => {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const Register()))
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Register()))
                                 },
                                 child: const Text(
                                   'Sign-up',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Color(0xff748288),
-                                      fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontSize: 15, color: Color(0xff748288), fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ],
@@ -148,12 +146,9 @@ class _LoginPageState extends State<LoginPage> {
   void _handleLoginUser() {
     // login user
     if (_loginFormKey.currentState!.validate()) {
-      final requestm = RequestForLogin(
-          email: emailController.text, password: passwordController.text);
-      context.read<AuthBloc>().add(LoginButtonPressed(requestm));
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text('Submitting data..')),
-      // );
+      print("object");
+      final request = RequestLogin(email: emailController.text, password: passwordController.text);
+      context.read<AuthBloc>().add(LoginButtonPressed(requestmodel: request));
     }
   }
 }

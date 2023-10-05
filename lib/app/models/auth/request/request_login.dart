@@ -1,31 +1,32 @@
 import 'dart:convert';
 
-class RequestForLogin {
-  String? email;
-  String? password;
+class RequestLogin {
+  final String email;
+  final String password;
 
-  RequestForLogin({
-    this.email,
-    this.password,
+  RequestLogin({
+    required this.email,
+    required this.password,
   });
 
-  factory RequestForLogin.fromJson(String str) =>
-      RequestForLogin.fromMap(json.decode(str));
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'email': email,
+      'password': password,
+    };
+  }
+
+  factory RequestLogin.fromMap(Map<String, dynamic> map) {
+    return RequestLogin(
+      email: map['email'] as String,
+      password: map['password'] as String,
+    );
+  }
 
   String toJson() => json.encode(toMap());
 
-  factory RequestForLogin.fromMap(Map<String, dynamic> json) => RequestForLogin(
-        email: json["email"],
-        password: json["password"],
-      );
-
-  Map<String, dynamic> toMap() => {
-        "email": email,
-        "password": password,
-      };
+  factory RequestLogin.fromJson(String source) => RequestLogin.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() {
-    return 'RequestForLogin{email: $email, password: $password}';
-  }
+  String toString() => 'RequestLogin(email: $email, password: $password)';
 }

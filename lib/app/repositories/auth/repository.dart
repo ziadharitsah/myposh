@@ -2,9 +2,9 @@ part of 'repo.dart';
 
 class ApiDataSource {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
-  Future<ResponseAuth> signIn(RequestForLogin request) async {
-    final response = await http.post(
-      Uri.parse(loginUrl),
+  Future<ResponseAuth> signIn(RequestLogin request) async {
+    var response = await http.post(
+      Uri.parse('http://192.168.1.7:8000/api/login'),
       headers: {'accept': 'application/json'},
       body: request.toMap(),
     );

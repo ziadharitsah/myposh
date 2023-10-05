@@ -23,6 +23,7 @@ class MainApp extends StatelessWidget {
         ),
       ],
       child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: LoginPage(),
       ),
     );
