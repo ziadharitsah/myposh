@@ -9,6 +9,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _loginFormKey = GlobalKey<FormState>();
+  bool isLoading = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   @override
@@ -89,21 +90,34 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(
                           height: 20,
                         ),
-                        BlocConsumer<AuthBloc, AuthState>(
-                          listener: (context, state) {
-                            if (state is UserLoaded) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('${state.model.data!.accessToken}')),
-                              );
-                            }
-                          },
-                          builder: (context, state) {
-                            return CustomFormButton(
-                              innerText: 'Login',
-                              onPressed: _handleLoginUser,
-                            );
-                          },
-                        ),
+                        isLoading
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : BlocConsumer<AuthBloc, AuthState>(
+                                listener: (context, state) {
+                                  if (state is UserLoaded) {
+                                    AnimatedSnackBar.material(
+                                      state.model.data!.user!.name!,
+                                      type: AnimatedSnackBarType.success,
+                                    ).show(context);
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(builder: (context) => const Home()), (route) => false);
+                                  }
+                                  if (state is AuthFailure) {
+                                    AnimatedSnackBar.material(
+                                      state.error,
+                                      type: AnimatedSnackBarType.success,
+                                    ).show(context);
+                                  }
+                                },
+                                builder: (context, state) {
+                                  return CustomFormButton(
+                                    innerText: 'Login',
+                                    onPressed: _handleLoginUser,
+                                  );
+                                },
+                              ),
                         const SizedBox(
                           height: 18,
                         ),
@@ -146,7 +160,6 @@ class _LoginPageState extends State<LoginPage> {
   void _handleLoginUser() {
     // login user
     if (_loginFormKey.currentState!.validate()) {
-      print("object");
       final request = RequestLogin(email: emailController.text, password: passwordController.text);
       context.read<AuthBloc>().add(LoginButtonPressed(requestmodel: request));
     }

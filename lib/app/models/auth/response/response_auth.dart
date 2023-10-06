@@ -4,14 +4,12 @@ import 'dart:convert';
 class ResponseAuth {
   Meta? meta;
   Data? data;
-
   ResponseAuth({
     this.meta,
     this.data,
   });
 
-  factory ResponseAuth.fromRawJson(String str) =>
-      ResponseAuth.fromJson(json.decode(str));
+  factory ResponseAuth.fromRawJson(String str) => ResponseAuth.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
