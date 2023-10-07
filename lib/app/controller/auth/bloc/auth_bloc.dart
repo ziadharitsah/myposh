@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:myposh/app/models/auth/request/request_login.dart';
 import 'package:myposh/app/models/auth/request/request_register.dart';
 import 'package:myposh/app/models/auth/response/response_auth.dart';
+import 'package:myposh/app/models/auth/response/response_user.dart';
 import 'package:myposh/app/repositories/auth/api.dart';
 
 import '../../../repositories/auth/repo.dart';
@@ -48,7 +49,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     // on<AppStarted>((event, emit) async {
     //   // TODO: implement event handler
     // });
-
     on<RegisterButtonPressed>((event, emit) async {
       try {
         ApiResponse response = await repository.register(event.register);
@@ -60,6 +60,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(AuthFailure(response.error.toString()));
         }
       } catch (error) {}
+    });
+
+    on<LoggedIn>((event, emit) async {
+      final user = await repository.user();
+      emit(Local(responses: user.data as ResponseUser));
+      print(user);
     });
   }
 }

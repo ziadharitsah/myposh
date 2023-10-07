@@ -76,6 +76,33 @@ class ApiDataSource {
     return apiResponse;
   }
 
+  Future<ApiResponse> user() async {
+    ApiResponse apiResponse = ApiResponse();
+    try {
+      var token = await hasToken();
+      final response = await http.post(
+        Uri.parse('http://192.168.1.7:8000/api/user'),
+        headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
+      );
+
+      switch (response.statusCode) {
+        case 200:
+          apiResponse.data = ResponseUser.fromJson(jsonDecode(response.body));
+          break;
+        case 401:
+          apiResponse.error = "unauthorized";
+          break;
+        default:
+          apiResponse.error = "somethingWentWrong";
+          break;
+      }
+    } catch (e) {
+      apiResponse.error = "serverError";
+    }
+
+    return apiResponse;
+  }
+
   Future<bool> hasToken() async {
     var value = await storage.read(key: 'access_token');
     if (value != null) {
