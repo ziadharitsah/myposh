@@ -16,7 +16,11 @@ class ApiDataSource {
     ApiResponse apiResponse = ApiResponse();
     try {
       final response = await http.post(Uri.parse('http://192.168.1.7:8000/api/login'),
-          headers: {'Accept': 'application/json'}, body: request.toMap());
+          headers: {
+            'Accept': 'application/json',
+            // 'Content-Type': 'application/json',
+          },
+          body: request.toMap());
 
       switch (response.statusCode) {
         case 200:

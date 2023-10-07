@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                                 listener: (context, state) {
                                   if (state is UserLoaded) {
                                     AnimatedSnackBar.material(
-                                      state.model.data!.user!.name!,
+                                      state.model.user!.name!,
                                       type: AnimatedSnackBarType.success,
                                     ).show(context);
                                     Navigator.of(context).pushAndRemoveUntil(
