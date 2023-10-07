@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                                 listener: (context, state) {
                                   if (state is UserLoaded) {
                                     AnimatedSnackBar.material(
-                                      state.model.user!.name!,
+                                      state.model.token!,
                                       type: AnimatedSnackBarType.success,
                                     ).show(context);
                                     Navigator.of(context).pushAndRemoveUntil(
@@ -107,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                                   if (state is AuthFailure) {
                                     AnimatedSnackBar.material(
                                       state.error,
-                                      type: AnimatedSnackBarType.success,
+                                      type: AnimatedSnackBarType.error,
                                     ).show(context);
                                   }
                                 },

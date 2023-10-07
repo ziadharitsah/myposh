@@ -45,3 +45,12 @@ class LoginButtonPressed extends AuthEvent {
     return 'LoginButtonPressed {$requestmodel}';
   }
 }
+
+class RegisterButtonPressed extends AuthEvent {
+  final RequestRegister register;
+
+  const RegisterButtonPressed({required this.register});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [register];
+}

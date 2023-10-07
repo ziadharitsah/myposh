@@ -29,7 +29,7 @@ class AuthFailure extends AuthState {
 }
 
 class UserLoaded extends AuthState {
-  final ResponseAuth model;
+  final Response model;
 
   const UserLoaded({required this.model});
   @override

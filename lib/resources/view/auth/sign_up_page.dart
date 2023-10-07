@@ -14,8 +14,7 @@ class _RegisterState extends State<Register> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController passwordConfirmationController =
-      TextEditingController();
+  TextEditingController passwordConfirmationController = TextEditingController();
 
   Future _pickProfileImage() async {
     try {
@@ -57,9 +56,7 @@ class _RegisterState extends State<Register> {
                         height: 130,
                         child: CircleAvatar(
                           backgroundColor: Colors.grey.shade200,
-                          backgroundImage: _profileImage != null
-                              ? FileImage(_profileImage!)
-                              : null,
+                          backgroundImage: _profileImage != null ? FileImage(_profileImage!) : null,
                           child: Stack(
                             children: [
                               Positioned(
@@ -72,8 +69,7 @@ class _RegisterState extends State<Register> {
                                     width: 50,
                                     decoration: BoxDecoration(
                                       color: Colors.blue.shade400,
-                                      border: Border.all(
-                                          color: Colors.white, width: 3),
+                                      border: Border.all(color: Colors.white, width: 3),
                                       borderRadius: BorderRadius.circular(25),
                                     ),
                                     child: const Icon(
@@ -146,8 +142,7 @@ class _RegisterState extends State<Register> {
                         isDense: true,
                         obscureText: true,
                         validator: (textValue) {
-                          if (textValue == null ||
-                              textValue != passwordController.text) {
+                          if (textValue == null || textValue != passwordController.text) {
                             return 'Confirm password does not match';
                           }
                           return null;
@@ -157,9 +152,29 @@ class _RegisterState extends State<Register> {
                       const SizedBox(
                         height: 22,
                       ),
-                      CustomFormButton(
-                        innerText: 'Signup',
-                        onPressed: _handleSignupUser,
+                      BlocConsumer<AuthBloc, AuthState>(
+                        listener: (context, state) {
+                          if (state is UserLoaded) {
+                            AnimatedSnackBar.material(
+                              state.model.token!,
+                              type: AnimatedSnackBarType.success,
+                            ).show(context);
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(builder: (context) => const Home()), (route) => false);
+                          }
+                          if (state is AuthFailure) {
+                            AnimatedSnackBar.material(
+                              state.error,
+                              type: AnimatedSnackBarType.error,
+                            ).show(context);
+                          }
+                        },
+                        builder: (context, state) {
+                          return CustomFormButton(
+                            innerText: 'Sign Up',
+                            onPressed: _handleSignupUser,
+                          );
+                        },
                       ),
                       const SizedBox(
                         height: 18,
@@ -171,25 +186,14 @@ class _RegisterState extends State<Register> {
                           children: [
                             const Text(
                               'Already have an account ? ',
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  color: Color(0xff939393),
-                                  fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 13, color: Color(0xff939393), fontWeight: FontWeight.bold),
                             ),
                             GestureDetector(
-                              onTap: () => {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const LoginPage()))
-                              },
+                              onTap: () =>
+                                  {Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()))},
                               child: const Text(
                                 'Log-in',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: Color(0xff748288),
-                                    fontWeight: FontWeight.bold),
+                                style: TextStyle(fontSize: 15, color: Color(0xff748288), fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],
@@ -212,9 +216,13 @@ class _RegisterState extends State<Register> {
   void _handleSignupUser() {
     // signup user
     if (_signupFormKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Submitting data..')),
-      );
+      final requestRegister = RequestRegister(
+          name: nameController.text,
+          email: emailController.text,
+          password: passwordController.text,
+          passwordConfirmation: passwordConfirmationController.text);
+
+      context.read<AuthBloc>().add(RegisterButtonPressed(register: requestRegister));
     }
   }
 }
