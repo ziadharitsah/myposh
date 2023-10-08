@@ -120,4 +120,9 @@ class ApiDataSource {
   //   storage.delete(key: 'access_token');
   //   storage.deleteAll();
   // }
+
+  String? getStringImage(File? file) {
+    if (file == null) return null;
+    return base64Encode(file.readAsBytesSync());
+  }
 }

@@ -75,10 +75,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<DataLoad>((event, emit) async {
       final hasToken = await repository.hasToken();
       if (hasToken != null) {
-        final user = await repository.user();
-        final data = user.data as ResponseUser;
-        print(data.user.name);
-        emit(AuthAuthenticated(modaluser: data));
+        ApiResponse user = await repository.user();
+        if (user.error == null) {
+          final data = user.data as ResponseUser;
+          print(data.user.name);
+          emit(AuthAuthenticated(modaluser: data));
+        }
       } else {
         emit(AuthUnAuthenticated());
       }
