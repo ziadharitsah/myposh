@@ -37,19 +37,22 @@ class UserLoaded extends AuthState {
   List<Object?> get props => [model];
 }
 
-class AuthAuthenticated extends AuthState {
+class AuthHasToken extends AuthState {
+  final String token;
+
+  const AuthHasToken({required this.token});
   @override
   // TODO: implement props
-  List<Object?> get props => [];
+  List<Object?> get props => [token];
 }
 
-class Local extends AuthState {
-  final ResponseUser responses;
+class AuthAuthenticated extends AuthState {
+  final ResponseUser modaluser;
 
-  const Local({required this.responses});
+  const AuthAuthenticated({required this.modaluser});
   @override
   // TODO: implement props
-  List<Object?> get props => [responses];
+  List<Object?> get props => [modaluser];
 }
 
 class AuthUnAuthenticated extends AuthState {

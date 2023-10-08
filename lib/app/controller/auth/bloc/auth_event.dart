@@ -10,19 +10,25 @@ class AppStarted extends AuthEvent {
   List<Object?> get props => [];
 }
 
+class DataLoad extends AuthEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
 class LoggedIn extends AuthEvent {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
+class GetDataWithToken extends AuthEvent {
   final String token;
 
-  const LoggedIn({required this.token});
+  const GetDataWithToken({required this.token});
   @override
   // TODO: implement props
   List<Object?> get props => [token];
-
-  @override
-  String toString() {
-    // TODO: implement toString
-    return 'LoggedIn (token $token)';
-  }
 }
 
 class LoggedOut extends AuthEvent {

@@ -1,7 +1,6 @@
 part of 'repo.dart';
 
 class ApiDataSource {
-  final FlutterSecureStorage storage = const FlutterSecureStorage();
   Future<Response> signIn(RequestLogin request) async {
     var response = await http.post(
       Uri.parse('http://192.168.1.7:8000/api/login'),
@@ -80,7 +79,7 @@ class ApiDataSource {
     ApiResponse apiResponse = ApiResponse();
     try {
       var token = await hasToken();
-      final response = await http.post(
+      final response = await http.get(
         Uri.parse('http://192.168.1.7:8000/api/user'),
         headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
       );
@@ -103,21 +102,22 @@ class ApiDataSource {
     return apiResponse;
   }
 
-  Future<bool> hasToken() async {
-    var value = await storage.read(key: 'access_token');
-    if (value != null) {
-      return true;
-    } else {
-      return false;
-    }
+  Future hasToken() async {
+    Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    final SharedPreferences local = await _prefs;
+    final String? token = local.getString("access_token");
+    if (token != null) return token;
+    return null;
   }
 
-  Future<void> persisToken(String token) async {
-    await storage.write(key: 'access_token', value: token);
+  Future persisToken(String token) async {
+    Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    final SharedPreferences local = await _prefs;
+    local.setString('access_token', token);
   }
 
-  Future<void> deleteToken() async {
-    storage.delete(key: 'access_token');
-    storage.deleteAll();
-  }
+  // Future<void> deleteToken() async {
+  //   storage.delete(key: 'access_token');
+  //   storage.deleteAll();
+  // }
 }

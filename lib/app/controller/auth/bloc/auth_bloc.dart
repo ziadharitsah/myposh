@@ -15,9 +15,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final ApiDataSource repository;
   AuthBloc(this.repository) : super(AuthInitial()) {
     on<AppStarted>((event, emit) async {
-      final bool hasToken = await repository.hasToken();
-      if (hasToken) {
-        emit(AuthAuthenticated());
+      final hasToken = await repository.hasToken();
+      if (hasToken != null) {
+        emit(AuthHasToken(token: hasToken));
+        print(hasToken);
       } else {
         emit(AuthUnAuthenticated());
       }
@@ -39,7 +40,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ApiResponse response = await repository.login(event.requestmodel);
         if (response.error == null) {
           final data = response.data as Response;
-          print(data);
+          await repository.persisToken(data.token);
+          print(data.token);
           emit(UserLoaded(model: data));
         } else {
           emit(AuthFailure(response.error.toString()));
@@ -62,10 +64,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } catch (error) {}
     });
 
-    on<LoggedIn>((event, emit) async {
-      final user = await repository.user();
-      emit(Local(responses: user.data as ResponseUser));
-      print(user);
+    // on<GetDataWithToken>((event, emit) async {
+    //   emit(AuthLoading());
+    //   ApiResponse user = await repository.user();
+    //   final data = user.data as ResponseUser;
+    //   print(data.user.name);
+    //   emit(AuthAuthenticated(modaluser: data));
+    // });
+
+    on<DataLoad>((event, emit) async {
+      final hasToken = await repository.hasToken();
+      if (hasToken != null) {
+        final user = await repository.user();
+        final data = user.data as ResponseUser;
+        print(data.user.name);
+        emit(AuthAuthenticated(modaluser: data));
+      } else {
+        emit(AuthUnAuthenticated());
+      }
     });
   }
 }

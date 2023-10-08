@@ -96,9 +96,9 @@ class _LoginPageState extends State<LoginPage> {
                               )
                             : BlocConsumer<AuthBloc, AuthState>(
                                 listener: (context, state) {
-                                  if (state is UserLoaded) {
+                                  if (state is AuthHasToken) {
                                     AnimatedSnackBar.material(
-                                      state.model.token!,
+                                      state.token,
                                       type: AnimatedSnackBarType.success,
                                     ).show(context);
                                     Navigator.of(context).pushAndRemoveUntil(

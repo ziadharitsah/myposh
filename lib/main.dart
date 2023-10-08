@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart';
+import 'package:myposh/app/models/auth/response/response_user.dart';
 import 'package:myposh/app/repositories/auth/repo.dart';
 import 'package:myposh/resources/view/auth/pages.dart';
 import 'package:myposh/resources/view/dashboard/main_screen.dart';
@@ -28,17 +30,21 @@ class MainApp extends StatelessWidget {
         home: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
           if (state is AuthInitial) {
             context.read<AuthBloc>().add(AppStarted());
+
             return Container(
               child: const Center(
                 child: CircularProgressIndicator(),
               ),
             );
           }
-          if (state is AuthAuthenticated || state is Local) {
+          if (state is AuthHasToken || state is AuthAuthenticated) {
+            context.read<AuthBloc>().add(DataLoad());
             return const Home();
           }
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.red,
+            ),
           );
         }),
       ),

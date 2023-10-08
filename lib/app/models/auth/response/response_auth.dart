@@ -252,10 +252,10 @@
 import 'dart:convert';
 
 class Response {
-  String? token;
+  String token;
 
   Response({
-    this.token,
+    required this.token,
   });
 
   factory Response.fromRawJson(String str) => Response.fromJson(json.decode(str));
